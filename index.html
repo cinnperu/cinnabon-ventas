@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6B4423">
+  <title>Cinnabon Ventas - Sistema de Gestión</title>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cinnabon-brown: #6B4423;
+      --cinnabon-gold: #D4A574;
+      --cinnabon-cream: #F5E6D3;
+      --cinnabon-dark: #3D2817;
+      --cinnabon-accent: #C85A2B;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--cinnabon-cream) 0%, #f0dcc8 100%);
+      color: var(--cinnabon-dark);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--cinnabon-brown) 0%, var(--cinnabon-dark) 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--cinnabon-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200, 90, 43, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--cinnabon-brown);
+      border: 2px solid var(--cinnabon-accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--cinnabon-cream);
+    }
+
+    .btn-logout {
+      background: var(--error);
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .auth-screen {
+      display: none;
+    }
+
+    .auth-screen.active {
+      display: block;
+    }
+
+    .auth-container {
+      max-width: 500px;
+      margin: 4rem auto;
+      background: white;
+      padding: 3rem 2rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      border-top: 6px solid var(--cinnabon-accent);
+    }
+
+    .auth-container h1 {
+      color: var(--cinnabon-brown);
+      margin-bottom: 2rem;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      color: var(--cinnabon-brown);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid var(--cinnabon-gold);
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--cinnabon-accent);
+      box-shadow: 0 0 0 3px rgba(200, 90, 43, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--cinnabon-accent), var(--cinnabon-brown));
+      color: white;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(200, 90, 43, 0.4);
+    }
+
+    .toggle-auth {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+    }
+
+    .toggle-auth a {
+      color: var(--cinnabon-accent);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 1rem;
+      border-radius: 0.6rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--error);
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 0.6rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      color: #1e40af;
+      border-left-color: #3b82f6;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border-left-color: var(--success);
+    }
+
+    .app-screen {
+      display: none;
+    }
+
+    .app-screen.active {
+      display: block;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 60px;
+      width: 250px;
+      height: calc(100vh - 60px);
+      background: white;
+      border-right: 2px solid #e5e7eb;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-item {
+      padding: 1rem 1.5rem;
+      color: var(--cinnabon-dark);
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: all 0.3s;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .sidebar-item:hover {
+      background: var(--cinnabon-cream);
+      border-left-color: var(--cinnabon-accent);
+    }
+
+    .sidebar-item.active {
+      background: rgba(200, 90, 43, 0.1);
+      border-left-color: var(--cinnabon-accent);
+      color: var(--cinnabon-accent);
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 2rem;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--cinnabon-accent);
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      color: var(--cinnabon-brown);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .table th {
+      background: var(--cinnabon-cream);
+      color: var(--cinnabon-brown);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--cinnabon-gold);
+    }
+
+    .table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .table tr:hover {
+      background: #f9fafb;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-admin {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-zonal {
+      background: #fce7f3;
+      color: #831843;
+    }
+
+    .badge-manager {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--cinnabon-accent);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    .stat-card .value {
+      color: var(--cinnabon-accent);
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .main-content {
+        margin-left: 200px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE AUTENTICACIÓN -->
+  <div class="auth-screen active" id="authScreen">
+    <div class="auth-container">
+      <h1>🥐 Cinnabon Ventas</h1>
+      
+      <div class="error-message" id="authError"></div>
+
+      <!-- REGISTRO SIMPLE -->
+      <div id="registerForm">
+        <h2 style="text-align: center; color: var(--cinnabon-brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Crear Cuenta</h2>
+        
+        <div class="alert alert-info">
+          📋 El administrador asignará tu rol después de revisar tu solicitud
+        </div>
+
+        <div class="form-group">
+          <label>Nombre Completo</label>
+          <input type="text" id="registerName" placeholder="Tu nombre" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+        </div>
+
+        <button class="btn-submit" onclick="handleRegister()">Crear Cuenta</button>
+
+        <div class="toggle-auth">
+          ¿Ya tienes cuenta? <a onclick="toggleAuthForms()">Inicia sesión</a>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm" style="display:none;">
+        <h2 style="text-align: center; color: var(--cinnabon-brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Iniciar Sesión</h2>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+        </div>
+
+        <button class="btn-submit" onclick="handleLogin()">Iniciar Sesión</button>
+
+        <div class="toggle-auth">
+          ¿No tienes cuenta? <a onclick="toggleAuthForms()">Crear cuenta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA DE LA APP -->
+  <div class="app-screen" id="appScreen">
+    <div class="header">
+      <div class="header-left">
+        <span>🥐</span>
+        <span>Cinnabon Ventas</span>
+      </div>
+      <div class="header-right">
+        <span id="userName" style="font-size: 0.9rem;"></span>
+        <span id="userRole" class="badge"></span>
+        <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+      <div class="sidebar-item" onclick="showPage('register-sales')">📝 Registrar Ventas</div>
+      <div class="sidebar-item" id="pendingUsersItem" onclick="showPage('pending-users')" style="display:none;">⏳ Usuarios Pendientes</div>
+      <div class="sidebar-item" id="manageZonesItem" onclick="showPage('manage-zones')" style="display:none;">🗺️ Gestionar Zonas</div>
+      <div class="sidebar-item" id="manageStoresItem" onclick="showPage('manage-stores')" style="display:none;">🏪 Gestionar Tiendas</div>
+    </div>
+
+    <div class="main-content">
+      <!-- DASHBOARD -->
+      <div class="page active" id="dashboardPage">
+        <div class="card">
+          <h2>📊 Dashboard</h2>
+          <div class="grid">
+            <div class="stat-card">
+              <h3>Ventas Este Mes</h3>
+              <div class="value" id="totalSales">S/. 0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Transacciones</h3>
+              <div class="value" id="totalTransactions">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Ticket Promedio</h3>
+              <div class="value" id="avgTicket">S/. 0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>📈 Últimas Transacciones</h2>
+          <table class="table" id="transactionsTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Concepto</th>
+                <th>Usuario</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsBody">
+              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REGISTRAR VENTAS -->
+      <div class="page" id="registerSalesPage">
+        <div class="card">
+          <h2>📝 Registrar Venta</h2>
+          
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="saleDate" required>
+          </div>
+
+          <div class="form-group">
+            <label>Monto (S/.)</label>
+            <input type="number" id="saleAmount" placeholder="0.00" min="0" step="0.01" required>
+          </div>
+
+          <div class="form-group">
+            <label>Concepto/Descripción</label>
+            <textarea id="saleDescription" placeholder="Ej: Venta de cinnabons, bebidas, etc." rows="3"></textarea>
+          </div>
+
+          <button class="btn-submit" onclick="registerSale()">Registrar Venta</button>
+        </div>
+
+        <div class="card">
+          <h2>📋 Mis Ventas</h2>
+          <table class="table" id="mySalesTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Concepto</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="mySalesBody">
+              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USUARIOS PENDIENTES (ADMIN) -->
+      <div class="page" id="pendingUsersPage">
+        <div class="card">
+          <h2>⏳ Usuarios Pendientes de Aprobación</h2>
+          <table class="table" id="pendingUsersTable">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol Asignado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="pendingUsersBody">
+              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Modal para asignar rol -->
+        <div class="card" style="display:none;" id="assignRoleCard">
+          <h2>🎯 Asignar Rol a Usuario</h2>
+          
+          <div class="form-group">
+            <label>Usuario</label>
+            <input type="text" id="assignUserName" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Rol</label>
+            <select id="assignRole" required>
+              <option value="">Selecciona rol</option>
+              <option value="admin">👑 Administrador</option>
+              <option value="zonal">🗺️ Jefa Zonal</option>
+              <option value="manager">🏪 Gerente de Tienda</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="assignZoneGroup" style="display:none;">
+            <label>Zona</label>
+            <select id="assignZone" required>
+              <option value="">Selecciona zona</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="assignStoreGroup" style="display:none;">
+            <label>Tienda</label>
+            <select id="assignStore" required>
+              <option value="">Selecciona tienda</option>
+            </select>
+          </div>
+
+          <button class="btn-submit" onclick="confirmAssignRole()">Asignar y Aprobar</button>
+        </div>
+      </div>
+
+      <!-- GESTIONAR ZONAS (ADMIN) -->
+      <div class="page" id="manageZonesPage">
+        <div class="card">
+          <h2>🗺️ Gestionar Zonas</h2>
+          
+          <div class="form-group">
+            <label>Nombre de Zona</label>
+            <input type="text" id="zoneName" placeholder="Ej: Lima Norte" required>
+          </div>
+
+          <button class="btn-submit" onclick="createZone()">Crear Zona</button>
+        </div>
+
+        <div class="card">
+          <h2>Zonas Existentes</h2>
+          <table class="table" id="zonesTable">
+            <thead>
+              <tr>
+                <th>Zona</th>
+                <th>Tiendas</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="zonesBody">
+              <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GESTIONAR TIENDAS (ADMIN) -->
+      <div class="page" id="manageStoresPage">
+        <div class="card">
+          <h2>🏪 Gestionar Tiendas</h2>
+          
+          <div class="form-group">
+            <label>Zona</label>
+            <select id="storeZone" required>
+              <option value="">Selecciona zona</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nombre de Tienda</label>
+            <input type="text" id="storeName" placeholder="Ej: Barbershop Centro" required>
+          </div>
+
+          <button class="btn-submit" onclick="createStore()">Crear Tienda</button>
+        </div>
+
+        <div class="card">
+          <h2>Tiendas Existentes</h2>
+          <table class="table" id="storesTable">
+            <thead>
+              <tr>
+                <th>Zona</th>
+                <th>Tienda</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="storesBody">
+              <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSCj_IukZemj9uniAlxuZvO5-r4JloPzU",
+      authDomain: "cinnabon-ventas.firebaseapp.com",
+      projectId: "cinnabon-ventas",
+      storageBucket: "cinnabon-ventas.firebasestorage.app",
+      messagingSenderId: "488286962922",
+      appId: "1:488286962922:web:135b5d3fc7eba246cdc393"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Current user
+    let currentUser = null;
+    let currentUserData = null;
+    let selectedUserForRole = null;
+
+    // Auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        currentUser = user;
+        try {
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          if (userDoc.exists) {
+            currentUserData = userDoc.data();
+            
+            // Si está pendiente, no puede acceder
+            if (currentUserData.status === 'pending') {
+              showError('Tu cuenta está pendiente de aprobación por el administrador');
+              logout();
+              return;
+            }
+            
+            showAppScreen();
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        currentUser = null;
+        currentUserData = null;
+        showAuthScreen();
+      }
+    });
+
+    // Toggle forms
+    function toggleAuthForms() {
+      document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = document.getElementById('registerForm').style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Register (SIN ELEGIR ROL)
+    async function handleRegister() {
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      if (!name || !email || !password) {
+        showError('Por favor completa todos los campos');
+        return;
+      }
+
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(email, password);
+        
+        await db.collection('users').doc(userCred.user.uid).set({
+          name,
+          email,
+          role: null, // Sin rol aún
+          zone: null,
+          store: null,
+          status: 'pending',
+          createdAt: new Date(),
+          approved: false
+        });
+
+        clearAuthForms();
+        showError('Cuenta creada. El administrador la revisará pronto.', 'success');
+        setTimeout(() => toggleAuthForms(), 2000);
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    // Login
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showError('Por favor completa todos los campos');
+        return;
+      }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    // Logout
+    async function logout() {
+      try {
+        await auth.signOut();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Show error
+    function showError(message, type = 'error') {
+      const errorDiv = document.getElementById('authError');
+      errorDiv.textContent = message;
+      errorDiv.className = `error-message show alert-${type}`;
+    }
+
+    // Clear forms
+    function clearAuthForms() {
+      document.getElementById('registerName').value = '';
+      document.getElementById('registerEmail').value = '';
+      document.getElementById('registerPassword').value = '';
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPassword').value = '';
+    }
+
+    // Show screens
+    function showAuthScreen() {
+      document.getElementById('authScreen').classList.add('active');
+      document.getElementById('appScreen').classList.remove('active');
+    }
+
+    function showAppScreen() {
+      document.getElementById('authScreen').classList.remove('active');
+      document.getElementById('appScreen').classList.add('active');
+      
+      updateUserDisplay();
+      loadDashboard();
+      setupSidebar();
+    }
+
+    // Update user display
+    function updateUserDisplay() {
+      document.getElementById('userName').textContent = currentUserData.name || 'Usuario';
+      
+      const roleDisplay = {
+        'admin': '👑 Admin',
+        'zonal': '🗺️ Jefa Zonal',
+        'manager': '🏪 Gerente',
+        null: '⏳ Sin Asignar'
+      };
+      
+      const roleBadge = document.getElementById('userRole');
+      roleBadge.textContent = roleDisplay[currentUserData.role] || 'Sin Rol';
+      roleBadge.className = `badge badge-${currentUserData.role || 'pending'}`;
+    }
+
+    // Setup sidebar
+    function setupSidebar() {
+      if (currentUserData.role === 'admin') {
+        document.getElementById('pendingUsersItem').style.display = 'block';
+        document.getElementById('manageZonesItem').style.display = 'block';
+        document.getElementById('manageStoresItem').style.display = 'block';
+      }
+    }
+
+    // Show page
+    function showPage(pageName) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      
+      document.getElementById(pageName + 'Page').classList.add('active');
+      event.target.classList.add('active');
+      
+      if (pageName === 'dashboard') {
+        loadDashboard();
+      } else if (pageName === 'register-sales') {
+        loadMySales();
+      } else if (pageName === 'pending-users') {
+        loadPendingUsers();
+      } else if (pageName === 'manage-zones') {
+        loadZones();
+      } else if (pageName === 'manage-stores') {
+        loadStores();
+      }
+    }
+
+    // Load dashboard
+    async function loadDashboard() {
+      try {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        
+        let query = db.collection('sales').where('userId', '==', currentUser.uid).where('date', '>=', monthStart);
+        
+        const snapshot = await query.get();
+        let totalSales = 0;
+        const sales = [];
+        
+        snapshot.forEach(doc => {
+          const sale = doc.data();
+          totalSales += sale.amount || 0;
+          sales.push({ id: doc.id, ...sale });
+        });
+
+        document.getElementById('totalSales').textContent = 'S/. ' + totalSales.toFixed(2);
+        document.getElementById('totalTransactions').textContent = sales.length;
+        document.getElementById('avgTicket').textContent = sales.length > 0 ? 'S/. ' + (totalSales / sales.length).toFixed(2) : 'S/. 0';
+        
+        loadTransactionsTable(sales.slice(0, 10));
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Load transactions table
+    function loadTransactionsTable(sales) {
+      const tbody = document.getElementById('transactionsBody');
+      tbody.innerHTML = '';
+      
+      if (sales.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay transacciones</td></tr>';
+        return;
+      }
+      
+      sales.forEach(sale => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+          <td>${new Date(sale.date).toLocaleDateString('es-PE')}</td>
+          <td>S/. ${(sale.amount || 0).toFixed(2)}</td>
+          <td>${sale.description || '-'}</td>
+          <td>${currentUserData.name}</td>
+        `;
+      });
+    }
+
+    // Register sale
+    async function registerSale() {
+      const date = document.getElementById('saleDate').value;
+      const amount = parseFloat(document.getElementById('saleAmount').value);
+      const description = document.getElementById('saleDescription').value;
+
+      if (!date || !amount || isNaN(amount)) {
+        alert('Por favor completa los campos requeridos');
+        return;
+      }
+
+      try {
+        await db.collection('sales').add({
+          userId: currentUser.uid,
+          userName: currentUserData.name,
+          zone: currentUserData.zone,
+          store: currentUserData.store,
+          date: new Date(date),
+          amount,
+          description,
+          createdAt: new Date()
+        });
+
+        alert('Venta registrada exitosamente');
+        document.getElementById('saleDate').value = '';
+        document.getElementById('saleAmount').value = '';
+        document.getElementById('saleDescription').value = '';
+        loadMySales();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Load my sales
+    async function loadMySales() {
+      try {
+        const snapshot = await db.collection('sales').where('userId', '==', currentUser.uid).orderBy('date', 'desc').get();
+        const tbody = document.getElementById('mySalesBody');
+        tbody.innerHTML = '';
+        
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay ventas registradas</td></tr>';
+          return;
+        }
+        
+        snapshot.forEach(doc => {
+          const sale = doc.data();
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td>${new Date(sale.date).toLocaleDateString('es-PE')}</td>
+            <td>S/. ${(sale.amount || 0).toFixed(2)}</td>
+            <td>${sale.description || '-'}</td>
+            <td><button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="deleteSale('${doc.id}')">Eliminar</button></td>
+          `;
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Delete sale
+    async function deleteSale(saleId) {
+      if (confirm('¿Estás seguro?')) {
+        try {
+          await db.collection('sales').doc(saleId).delete();
+          loadMySales();
+        } catch (error) {
+          alert('Error: ' + error.message);
+        }
+      }
+    }
+
+    // Load pending users (ADMIN)
+    async function loadPendingUsers() {
+      if (currentUserData.role !== 'admin') return;
+      
+      try {
+        const snapshot = await db.collection('users').where('status', '==', 'pending').get();
+        const tbody = document.getElementById('pendingUsersBody');
+        tbody.innerHTML = '';
+        
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay usuarios pendientes</td></tr>';
+          return;
+        }
+        
+        snapshot.forEach(doc => {
+          const user = doc.data();
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td><span class="badge badge-pending">Sin Asignar</span></td>
+            <td>
+              <button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="openAssignRoleModal('${doc.id}', '${user.name}')">Asignar Rol</button>
+              <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="rejectUser('${doc.id}')">Rechazar</button>
+            </td>
+          `;
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Open assign role modal
+    function openAssignRoleModal(userId, userName) {
+      selectedUserForRole = userId;
+      document.getElementById('assignUserName').value = userName;
+      document.getElementById('assignRole').value = '';
+      document.getElementById('assignZoneGroup').style.display = 'none';
+      document.getElementById('assignStoreGroup').style.display = 'none';
+      document.getElementById('assignRoleCard').style.display = 'block';
+    }
+
+    // Handle role change in assignment
+    document.addEventListener('DOMContentLoaded', function() {
+      const roleSelect = document.getElementById('assignRole');
+      if (roleSelect) {
+        roleSelect.addEventListener('change', function() {
+          if (this.value === 'zonal') {
+            document.getElementById('assignZoneGroup').style.display = 'block';
+            document.getElementById('assignStoreGroup').style.display = 'none';
+            loadZonesForAssignment();
+          } else if (this.value === 'manager') {
+            document.getElementById('assignZoneGroup').style.display = 'none';
+            document.getElementById('assignStoreGroup').style.display = 'block';
+            loadStoresForAssignment();
+          } else {
+            document.getElementById('assignZoneGroup').style.display = 'none';
+            document.getElementById('assignStoreGroup').style.display = 'none';
+          }
+        });
+      }
+    });
+
+    // Load zones for assignment
+    async function loadZonesForAssignment() {
+      try {
+        const snapshot = await db.collection('zones').get();
+        const select = document.getElementById('assignZone');
+        select.innerHTML = '<option value="">Selecciona zona</option>';
+        
+        snapshot.forEach(doc => {
+          const zone = doc.data();
+          const option = document.createElement('option');
+          option.value = zone.name;
+          option.textContent = zone.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Load stores for assignment
+    async function loadStoresForAssignment() {
+      try {
+        const snapshot = await db.collection('stores').get();
+        const select = document.getElementById('assignStore');
+        select.innerHTML = '<option value="">Selecciona tienda</option>';
+        
+        snapshot.forEach(doc => {
+          const store = doc.data();
+          const option = document.createElement('option');
+          option.value = doc.id;
+          option.textContent = `${store.zone} - ${store.name}`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Confirm assign role
+    async function confirmAssignRole() {
+      const role = document.getElementById('assignRole').value;
+      let zone = null;
+      let store = null;
+
+      if (!role) {
+        alert('Selecciona un rol');
+        return;
+      }
+
+      if (role === 'zonal') {
+        zone = document.getElementById('assignZone').value;
+        if (!zone) {
+          alert('Selecciona una zona');
+          return;
+        }
+      } else if (role === 'manager') {
+        store = document.getElementById('assignStore').value;
+        if (!store) {
+          alert('Selecciona una tienda');
+          return;
+        }
+      }
+
+      try {
+        await db.collection('users').doc(selectedUserForRole).update({
+          role,
+          zone,
+          store,
+          status: 'approved',
+          approved: true,
+          approvedAt: new Date()
+        });
+
+        document.getElementById('assignRoleCard').style.display = 'none';
+        loadPendingUsers();
+        alert('Usuario aprobado y asignado correctamente');
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Reject user
+    async function rejectUser(userId) {
+      try {
+        await db.collection('users').doc(userId).update({
+          status: 'rejected',
+          rejectedAt: new Date()
+        });
+        loadPendingUsers();
+        alert('Usuario rechazado');
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Load zones (ADMIN)
+    async function loadZones() {
+      if (currentUserData.role !== 'admin') return;
+      
+      try {
+        const snapshot = await db.collection('zones').orderBy('name').get();
+        const tbody = document.getElementById('zonesBody');
+        tbody.innerHTML = '';
+        
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999;">No hay zonas creadas</td></tr>';
+          return;
+        }
+        
+        snapshot.forEach(doc => {
+          const zone = doc.data();
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td>${zone.name}</td>
+            <td>${zone.storeCount || 0}</td>
+            <td><button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="deleteZone('${doc.id}')">Eliminar</button></td>
+          `;
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Create zone
+    async function createZone() {
+      const name = document.getElementById('zoneName').value;
+      
+      if (!name) {
+        alert('Por favor ingresa el nombre de la zona');
+        return;
+      }
+      
+      try {
+        await db.collection('zones').add({
+          name,
+          storeCount: 0,
+          createdAt: new Date()
+        });
+        
+        document.getElementById('zoneName').value = '';
+        loadZones();
+        alert('Zona creada exitosamente');
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Delete zone
+    async function deleteZone(zoneId) {
+      if (confirm('¿Estás seguro?')) {
+        try {
+          await db.collection('zones').doc(zoneId).delete();
+          loadZones();
+        } catch (error) {
+          alert('Error: ' + error.message);
+        }
+      }
+    }
+
+    // Load stores (ADMIN)
+    async function loadStores() {
+      if (currentUserData.role !== 'admin') return;
+      
+      try {
+        const snapshot = await db.collection('stores').orderBy('zone').get();
+        const tbody = document.getElementById('storesBody');
+        tbody.innerHTML = '';
+        
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999;">No hay tiendas creadas</td></tr>';
+          return;
+        }
+        
+        snapshot.forEach(doc => {
+          const store = doc.data();
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td>${store.zone}</td>
+            <td>${store.name}</td>
+            <td><button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="deleteStore('${doc.id}')">Eliminar</button></td>
+          `;
+        });
+        
+        loadZonesForStoreSelect();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Load zones for store select
+    async function loadZonesForStoreSelect() {
+      try {
+        const snapshot = await db.collection('zones').get();
+        const select = document.getElementById('storeZone');
+        select.innerHTML = '<option value="">Selecciona zona</option>';
+        
+        snapshot.forEach(doc => {
+          const zone = doc.data();
+          const option = document.createElement('option');
+          option.value = zone.name;
+          option.textContent = zone.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Create store
+    async function createStore() {
+      const zone = document.getElementById('storeZone').value;
+      const name = document.getElementById('storeName').value;
+      
+      if (!zone || !name) {
+        alert('Por favor completa todos los campos');
+        return;
+      }
+      
+      try {
+        await db.collection('stores').add({
+          zone,
+          name,
+          createdAt: new Date()
+        });
+        
+        document.getElementById('storeName').value = '';
+        document.getElementById('storeZone').value = '';
+        loadStores();
+        alert('Tienda creada exitosamente');
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Delete store
+    async function deleteStore(storeId) {
+      if (confirm('¿Estás seguro?')) {
+        try {
+          await db.collection('stores').doc(storeId).delete();
+          loadStores();
+        } catch (error) {
+          alert('Error: ' + error.message);
+        }
+      }
+    }
+
+    // Set today's date as default
+    window.addEventListener('load', function() {
+      const dateInput = document.getElementById('saleDate');
+      if (dateInput) {
+        dateInput.valueAsDate = new Date();
+      }
+    });
+  </script>
+
+</body>
+</html>
