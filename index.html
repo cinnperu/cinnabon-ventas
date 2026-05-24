@@ -4,35 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#6B4423">
-  <title>Cinnabon Ventas - Sistema de Gestión</title>
-  
+  <title>Cinnabon Ventas</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --cinnabon-brown: #6B4423;
-      --cinnabon-gold: #D4A574;
-      --cinnabon-cream: #F5E6D3;
-      --cinnabon-dark: #3D2817;
-      --cinnabon-accent: #C85A2B;
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --error: #ef4444;
+      --brown: #6B4423;
+      --dark: #3D2817;
+      --accent: #C85A2B;
+      --cream: #F5E6D3;
+      --gold: #D4A574;
     }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--cinnabon-cream) 0%, #f0dcc8 100%);
-      color: var(--cinnabon-dark);
+      background: linear-gradient(135deg, var(--cream) 0%, #f0dcc8 100%);
+      color: var(--dark);
       min-height: 100vh;
     }
-
     .header {
-      background: linear-gradient(135deg, var(--cinnabon-brown) 0%, var(--cinnabon-dark) 100%);
+      background: linear-gradient(135deg, var(--brown) 0%, var(--dark) 100%);
       color: white;
       padding: 1.5rem 2rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -43,61 +32,14 @@
       top: 0;
       z-index: 100;
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 1.5rem;
-    }
-
-    .header-right {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 0.6rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 0.95rem;
-    }
-
-    .btn-primary {
-      background: var(--cinnabon-accent);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(200, 90, 43, 0.3);
-    }
-
-    .btn-logout {
-      background: var(--error);
-      color: white;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    .auth-screen {
-      display: none;
-    }
-
-    .auth-screen.active {
-      display: block;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 1rem; font-size: 1.5rem; }
+    .header-right { display: flex; gap: 1rem; align-items: center; }
+    .btn { padding: 0.7rem 1.5rem; border: none; border-radius: 0.6rem; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(200, 90, 43, 0.3); }
+    .btn-logout { background: #ef4444; color: white; padding: 0.5rem 1rem; font-size: 0.9rem; }
+    .auth-screen { display: none; }
+    .auth-screen.active { display: block; }
     .auth-container {
       max-width: 500px;
       margin: 4rem auto;
@@ -105,112 +47,64 @@
       padding: 3rem 2rem;
       border-radius: 1.2rem;
       box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      border-top: 6px solid var(--cinnabon-accent);
+      border-top: 6px solid var(--accent);
     }
-
     .auth-container h1 {
-      color: var(--cinnabon-brown);
+      color: var(--brown);
       margin-bottom: 2rem;
       text-align: center;
       font-size: 1.8rem;
     }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    label {
-      display: block;
-      color: var(--cinnabon-brown);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    input, select {
+    .form-group { margin-bottom: 1.5rem; }
+    label { display: block; color: var(--brown); font-weight: 700; margin-bottom: 0.5rem; }
+    input, select, textarea {
       width: 100%;
       padding: 0.8rem;
-      border: 2px solid var(--cinnabon-gold);
+      border: 2px solid var(--gold);
       border-radius: 0.6rem;
       font-size: 0.95rem;
       font-family: inherit;
-      transition: all 0.3s;
     }
-
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: var(--cinnabon-accent);
+      border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(200, 90, 43, 0.1);
     }
-
     .btn-submit {
       width: 100%;
       padding: 1rem;
-      background: linear-gradient(135deg, var(--cinnabon-accent), var(--cinnabon-brown));
+      background: linear-gradient(135deg, var(--accent), var(--brown));
       color: white;
       border: none;
       border-radius: 0.6rem;
       font-weight: 800;
       font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
-
-    .btn-submit:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 18px rgba(200, 90, 43, 0.4);
-    }
-
-    .toggle-auth {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: #666;
-    }
-
-    .toggle-auth a {
-      color: var(--cinnabon-accent);
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
+    .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(200, 90, 43, 0.4); }
+    .toggle-auth { text-align: center; margin-top: 1.5rem; color: #666; }
+    .toggle-auth a { color: var(--accent); font-weight: 700; cursor: pointer; text-decoration: none; }
     .error-message {
       background: #fee2e2;
       color: #991b1b;
       padding: 1rem;
       border-radius: 0.6rem;
       margin-bottom: 1.5rem;
-      border-left: 4px solid var(--error);
+      border-left: 4px solid #ef4444;
       display: none;
     }
-
-    .error-message.show {
-      display: block;
-    }
-
+    .error-message.show { display: block; }
     .alert {
       padding: 1rem;
       border-radius: 0.6rem;
       margin-bottom: 1.5rem;
-      border-left: 4px solid;
-    }
-
-    .alert-info {
+      border-left: 4px solid #3b82f6;
       background: #dbeafe;
       color: #1e40af;
-      border-left-color: #3b82f6;
     }
-
-    .app-screen {
-      display: none;
-    }
-
-    .app-screen.active {
-      display: block;
-    }
-
+    .app-screen { display: none; }
+    .app-screen.active { display: block; }
     .sidebar {
       position: fixed;
       left: 0;
@@ -222,978 +116,505 @@
       padding: 1.5rem 0;
       overflow-y: auto;
     }
-
     .sidebar-item {
       padding: 1rem 1.5rem;
-      color: var(--cinnabon-dark);
+      color: var(--dark);
       cursor: pointer;
       border-left: 4px solid transparent;
       transition: all 0.3s;
       font-weight: 600;
-      user-select: none;
     }
-
-    .sidebar-item:hover {
-      background: var(--cinnabon-cream);
-      border-left-color: var(--cinnabon-accent);
-    }
-
-    .sidebar-item.active {
-      background: rgba(200, 90, 43, 0.1);
-      border-left-color: var(--cinnabon-accent);
-      color: var(--cinnabon-accent);
-    }
-
-    .main-content {
-      margin-left: 250px;
-      padding: 2rem;
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
+    .sidebar-item:hover { background: var(--cream); border-left-color: var(--accent); }
+    .sidebar-item.active { background: rgba(200, 90, 43, 0.1); border-left-color: var(--accent); color: var(--accent); }
+    .main-content { margin-left: 250px; padding: 2rem; }
+    .page { display: none; }
+    .page.active { display: block; }
     .card {
       background: white;
       border-radius: 1rem;
       padding: 2rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border-top: 4px solid var(--cinnabon-accent);
+      border-top: 4px solid var(--accent);
       margin-bottom: 2rem;
     }
-
-    .card h2 {
-      color: var(--cinnabon-brown);
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
-    }
-
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .table th {
-      background: var(--cinnabon-cream);
-      color: var(--cinnabon-brown);
-      padding: 1rem;
-      text-align: left;
-      font-weight: 700;
-      border-bottom: 2px solid var(--cinnabon-gold);
-    }
-
-    .table td {
-      padding: 1rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .table tr:hover {
-      background: #f9fafb;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.4rem 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .badge-pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .badge-approved {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .badge-admin {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border-top: 4px solid var(--cinnabon-accent);
-      text-align: center;
-    }
-
-    .stat-card h3 {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 0.8rem;
-      font-weight: 600;
-    }
-
-    .stat-card .value {
-      color: var(--cinnabon-accent);
-      font-size: 2rem;
-      font-weight: 900;
-    }
-
+    .card h2 { color: var(--brown); margin-bottom: 1.5rem; font-size: 1.5rem; }
+    .table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .table th { background: var(--cream); color: var(--brown); padding: 1rem; text-align: left; font-weight: 700; border-bottom: 2px solid var(--gold); }
+    .table td { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+    .table tr:hover { background: #f9fafb; }
+    .badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 700; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-approved { background: #d1fae5; color: #065f46; }
+    .badge-admin { background: #dbeafe; color: #1e40af; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .stat-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-top: 4px solid var(--accent); text-align: center; }
+    .stat-card h3 { color: #666; font-size: 0.9rem; margin-bottom: 0.8rem; font-weight: 600; }
+    .stat-card .value { color: var(--accent); font-size: 2rem; font-weight: 900; }
     @media (max-width: 768px) {
-      .sidebar {
-        width: 200px;
-      }
-
-      .main-content {
-        margin-left: 200px;
-      }
+      .sidebar { width: 200px; }
+      .main-content { margin-left: 200px; }
     }
-
     @media (max-width: 600px) {
-      .sidebar {
-        display: none;
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-    }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: #999;
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- PANTALLA DE AUTENTICACIÓN -->
-  <div class="auth-screen active" id="authScreen">
-    <div class="auth-container">
-      <h1>🥐 Cinnabon Ventas</h1>
-      
-      <div class="error-message" id="authError"></div>
+<div class="auth-screen active" id="authScreen">
+  <div class="auth-container">
+    <h1>🥐 Cinnabon Ventas</h1>
+    <div class="error-message" id="authError"></div>
 
-      <!-- LOGIN -->
-      <div id="loginForm">
-        <h2 style="text-align: center; color: var(--cinnabon-brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Iniciar Sesión</h2>
-        
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="loginEmail" placeholder="tu@email.com" required>
-        </div>
-
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
-        </div>
-
-        <button class="btn-submit" onclick="handleLogin()">Iniciar Sesión</button>
-
-        <div class="toggle-auth">
-          ¿No tienes cuenta? <a onclick="toggleAuthForms()">Crear cuenta</a>
-        </div>
+    <div id="loginForm">
+      <h2 style="text-align: center; color: var(--brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Iniciar Sesión</h2>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="tu@email.com">
       </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="Tu contraseña">
+      </div>
+      <button class="btn-submit" onclick="handleLogin()">Iniciar Sesión</button>
+      <div class="toggle-auth">
+        ¿No tienes cuenta? <a onclick="toggleForms()">Crear cuenta</a>
+      </div>
+    </div>
 
-      <!-- REGISTRO -->
-      <div id="registerForm" style="display:none;">
-        <h2 style="text-align: center; color: var(--cinnabon-brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Crear Cuenta</h2>
-        
-        <div class="alert alert-info">
-          📋 El administrador asignará tu rol después de revisar tu solicitud
-        </div>
-
-        <div class="form-group">
-          <label>Nombre Completo</label>
-          <input type="text" id="registerName" placeholder="Tu nombre" required>
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="registerEmail" placeholder="tu@email.com" required>
-        </div>
-
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
-        </div>
-
-        <button class="btn-submit" onclick="handleRegister()">Crear Cuenta</button>
-
-        <div class="toggle-auth">
-          ¿Ya tienes cuenta? <a onclick="toggleAuthForms()">Inicia sesión</a>
-        </div>
+    <div id="registerForm" style="display:none;">
+      <h2 style="text-align: center; color: var(--brown); margin-bottom: 1.5rem; font-size: 1.3rem;">Crear Cuenta</h2>
+      <div class="alert">📋 El administrador asignará tu rol después de revisar tu solicitud</div>
+      <div class="form-group">
+        <label>Nombre Completo</label>
+        <input type="text" id="registerName" placeholder="Tu nombre">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="registerEmail" placeholder="tu@email.com">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
+      </div>
+      <button class="btn-submit" onclick="handleRegister()">Crear Cuenta</button>
+      <div class="toggle-auth">
+        ¿Ya tienes cuenta? <a onclick="toggleForms()">Inicia sesión</a>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- PANTALLA DE LA APP -->
-  <div class="app-screen" id="appScreen">
-    <div class="header">
-      <div class="header-left">
-        <span>🥐</span>
-        <span>Cinnabon Ventas</span>
-      </div>
-      <div class="header-right">
-        <span id="userName" style="font-size: 0.9rem;"></span>
-        <span id="userRole" class="badge"></span>
-        <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
-      </div>
+<div class="app-screen" id="appScreen">
+  <div class="header">
+    <div class="header-left">
+      <span>🥐</span>
+      <span>Cinnabon Ventas</span>
     </div>
-
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
-      <div class="sidebar-item" onclick="showPage('register-sales')">📝 Registrar Ventas</div>
-      <div class="sidebar-item" id="pendingUsersItem" onclick="showPage('pending-users')" style="display:none;">⏳ Usuarios Pendientes</div>
-      <div class="sidebar-item" id="manageZonesItem" onclick="showPage('manage-zones')" style="display:none;">🗺️ Gestionar Zonas</div>
-      <div class="sidebar-item" id="manageStoresItem" onclick="showPage('manage-stores')" style="display:none;">🏪 Gestionar Tiendas</div>
-    </div>
-
-    <div class="main-content">
-      <!-- DASHBOARD -->
-      <div class="page active" id="dashboardPage">
-        <div class="card">
-          <h2>📊 Dashboard</h2>
-          <div class="grid">
-            <div class="stat-card">
-              <h3>Ventas Este Mes</h3>
-              <div class="value" id="totalSales">S/. 0</div>
-            </div>
-            <div class="stat-card">
-              <h3>Transacciones</h3>
-              <div class="value" id="totalTransactions">0</div>
-            </div>
-            <div class="stat-card">
-              <h3>Ticket Promedio</h3>
-              <div class="value" id="avgTicket">S/. 0</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>📈 Últimas Transacciones</h2>
-          <table class="table" id="transactionsTable">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Concepto</th>
-                <th>Usuario</th>
-              </tr>
-            </thead>
-            <tbody id="transactionsBody">
-              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- REGISTRAR VENTAS -->
-      <div class="page" id="registerSalesPage">
-        <div class="card">
-          <h2>📝 Registrar Venta</h2>
-          
-          <div class="form-group">
-            <label>Fecha</label>
-            <input type="date" id="saleDate" required>
-          </div>
-
-          <div class="form-group">
-            <label>Monto (S/.)</label>
-            <input type="number" id="saleAmount" placeholder="0.00" min="0" step="0.01" required>
-          </div>
-
-          <div class="form-group">
-            <label>Concepto/Descripción</label>
-            <textarea id="saleDescription" placeholder="Ej: Venta de cinnabons, bebidas, etc." rows="3" style="width:100%; padding:0.8rem; border:2px solid var(--cinnabon-gold); border-radius:0.6rem; font-family:inherit;"></textarea>
-          </div>
-
-          <button class="btn-submit" onclick="registerSale()">Registrar Venta</button>
-        </div>
-
-        <div class="card">
-          <h2>📋 Mis Ventas</h2>
-          <table class="table" id="mySalesTable">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Concepto</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="mySalesBody">
-              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- USUARIOS PENDIENTES (ADMIN) -->
-      <div class="page" id="pendingUsersPage">
-        <div class="card">
-          <h2>⏳ Usuarios Pendientes de Aprobación</h2>
-          <table class="table" id="pendingUsersTable">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Rol Asignado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="pendingUsersBody">
-              <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- GESTIONAR ZONAS (ADMIN) -->
-      <div class="page" id="manageZonesPage">
-        <div class="card">
-          <h2>🗺️ Gestionar Zonas</h2>
-          
-          <div class="form-group">
-            <label>Nombre de Zona</label>
-            <input type="text" id="zoneName" placeholder="Ej: Lima Norte" required>
-          </div>
-
-          <button class="btn-submit" onclick="createZone()">Crear Zona</button>
-        </div>
-
-        <div class="card">
-          <h2>Zonas Existentes</h2>
-          <table class="table" id="zonesTable">
-            <thead>
-              <tr>
-                <th>Zona</th>
-                <th>Tiendas</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="zonesBody">
-              <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- GESTIONAR TIENDAS (ADMIN) -->
-      <div class="page" id="manageStoresPage">
-        <div class="card">
-          <h2>🏪 Gestionar Tiendas</h2>
-          
-          <div class="form-group">
-            <label>Zona</label>
-            <select id="storeZone" required>
-              <option value="">Selecciona zona</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Nombre de Tienda</label>
-            <input type="text" id="storeName" placeholder="Ej: Barbershop Centro" required>
-          </div>
-
-          <button class="btn-submit" onclick="createStore()">Crear Tienda</button>
-        </div>
-
-        <div class="card">
-          <h2>Tiendas Existentes</h2>
-          <table class="table" id="storesTable">
-            <thead>
-              <tr>
-                <th>Zona</th>
-                <th>Tienda</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="storesBody">
-              <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="header-right">
+      <span id="userName" style="font-size: 0.9rem;"></span>
+      <span id="userRole" class="badge"></span>
+      <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
     </div>
   </div>
 
-  <!-- Firebase SDK CDN -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+    <div class="sidebar-item" onclick="showPage('register-sales')">📝 Registrar Ventas</div>
+    <div class="sidebar-item" id="pendingUsersItem" style="display:none;" onclick="showPage('pending-users')">⏳ Usuarios Pendientes</div>
+    <div class="sidebar-item" id="manageZonesItem" style="display:none;" onclick="showPage('manage-zones')">🗺️ Gestionar Zonas</div>
+    <div class="sidebar-item" id="manageStoresItem" style="display:none;" onclick="showPage('manage-stores')">🏪 Gestionar Tiendas</div>
+  </div>
 
-  <script>
-    // ESPERAR A QUE FIREBASE CARGUE
-    let auth, db;
-    let currentUser = null;
-    let currentUserData = null;
+  <div class="main-content">
+    <div class="page active" id="dashboardPage">
+      <div class="card">
+        <h2>📊 Dashboard</h2>
+        <div class="grid">
+          <div class="stat-card">
+            <h3>Ventas Este Mes</h3>
+            <div class="value" id="totalSales">S/. 0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Transacciones</h3>
+            <div class="value" id="totalTransactions">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Ticket Promedio</h3>
+            <div class="value" id="avgTicket">S/. 0</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>📈 Últimas Transacciones</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Concepto</th>
+              <th>Usuario</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsBody">
+            <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    // Configuración Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyDSCj_IukZemj9uniAlxuZvO5-r4JloPzU",
-      authDomain: "cinnabon-ventas.firebaseapp.com",
-      projectId: "cinnabon-ventas",
-      storageBucket: "cinnabon-ventas.firebasestorage.app",
-      messagingSenderId: "488286962922",
-      appId: "1:488286962922:web:135b5d3fc7eba246cdc393"
-    };
+    <div class="page" id="registerSalesPage">
+      <div class="card">
+        <h2>📝 Registrar Venta</h2>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="saleDate">
+        </div>
+        <div class="form-group">
+          <label>Monto (S/.)</label>
+          <input type="number" id="saleAmount" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Concepto/Descripción</label>
+          <textarea id="saleDescription" placeholder="Ej: Venta de cinnabons" rows="3"></textarea>
+        </div>
+        <button class="btn-submit" onclick="registerSale()">Registrar Venta</button>
+      </div>
+      <div class="card">
+        <h2>📋 Mis Ventas</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Concepto</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="mySalesBody">
+            <tr><td colspan="4" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    auth = firebase.auth();
-    db = firebase.firestore();
+    <div class="page" id="pendingUsersPage">
+      <div class="card">
+        <h2>⏳ Usuarios Pendientes</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pendingUsersBody">
+            <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    // Escuchar cambios de autenticación
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        currentUser = user;
-        try {
-          const userDoc = await db.collection('users').doc(user.uid).get();
-          if (userDoc.exists) {
-            currentUserData = userDoc.data();
-            
-            if (currentUserData.status === 'pending') {
-              showError('Tu cuenta está pendiente de aprobación por el administrador');
-              logout();
-              return;
-            }
-            
-            showAppScreen();
-          } else {
-            logout();
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          showError('Error al cargar tu perfil');
+    <div class="page" id="manageZonesPage">
+      <div class="card">
+        <h2>🗺️ Gestionar Zonas</h2>
+        <div class="form-group">
+          <label>Nombre de Zona</label>
+          <input type="text" id="zoneName" placeholder="Ej: Lima Norte">
+        </div>
+        <button class="btn-submit" onclick="createZone()">Crear Zona</button>
+      </div>
+      <div class="card">
+        <h2>Zonas Existentes</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Zona</th>
+              <th>Tiendas</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="zonesBody">
+            <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="manageStoresPage">
+      <div class="card">
+        <h2>🏪 Gestionar Tiendas</h2>
+        <div class="form-group">
+          <label>Zona</label>
+          <select id="storeZone">
+            <option value="">Selecciona zona</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nombre de Tienda</label>
+          <input type="text" id="storeName" placeholder="Ej: Barbershop Centro">
+        </div>
+        <button class="btn-submit" onclick="createStore()">Crear Tienda</button>
+      </div>
+      <div class="card">
+        <h2>Tiendas Existentes</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Zona</th>
+              <th>Tienda</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="storesBody">
+            <tr><td colspan="3" style="text-align:center; color:#999;">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+
+<script>
+  let auth, db, currentUser, currentUserData;
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDSCj_IukZemj9uniAlxuZvO5-r4JloPzU",
+    authDomain: "cinnabon-ventas.firebaseapp.com",
+    projectId: "cinnabon-ventas",
+    storageBucket: "cinnabon-ventas.firebasestorage.app",
+    messagingSenderId: "488286962922",
+    appId: "1:488286962922:web:135b5d3fc7eba246cdc393"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      currentUser = user;
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        currentUserData = userDoc.data();
+        if (currentUserData.status === 'pending') {
+          showError('Tu cuenta está pendiente de aprobación');
+          logout();
+          return;
         }
+        showAppScreen();
       } else {
-        currentUser = null;
-        currentUserData = null;
-        showAuthScreen();
+        logout();
       }
-    });
-
-    // Toggle forms
-    function toggleAuthForms() {
-      document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
-      document.getElementById('registerForm').style.display = document.getElementById('registerForm').style.display === 'none' ? 'block' : 'none';
+    } else {
+      currentUser = null;
+      currentUserData = null;
+      showAuthScreen();
     }
+  });
 
-    // Register
-    async function handleRegister() {
-      const name = document.getElementById('registerName').value;
-      const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
+  function toggleForms() {
+    document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = document.getElementById('registerForm').style.display === 'none' ? 'block' : 'none';
+  }
 
-      if (!name || !email || !password) {
-        showError('Por favor completa todos los campos');
-        return;
-      }
-
-      try {
-        const userCred = await auth.createUserWithEmailAndPassword(email, password);
-        
-        await db.collection('users').doc(userCred.user.uid).set({
-          name,
-          email,
-          role: null,
-          zone: null,
-          store: null,
-          status: 'pending',
-          createdAt: new Date(),
-          approved: false
-        });
-
-        clearAuthForms();
-        showError('Cuenta creada. El administrador la revisará pronto.', 'success');
-        setTimeout(() => toggleAuthForms(), 2000);
-      } catch (error) {
-        showError(error.message);
-      }
+  async function handleRegister() {
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    if (!name || !email || !password) {
+      showError('Completa todos los campos');
+      return;
     }
-
-    // Login
-    async function handleLogin() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      if (!email || !password) {
-        showError('Por favor completa todos los campos');
-        return;
-      }
-
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-      } catch (error) {
-        showError(error.message);
-      }
-    }
-
-    // Logout
-    async function logout() {
-      try {
-        await auth.signOut();
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Show error
-    function showError(message, type = 'error') {
-      const errorDiv = document.getElementById('authError');
-      errorDiv.textContent = message;
-      if (type === 'success') {
-        errorDiv.style.background = '#d1fae5';
-        errorDiv.style.color = '#065f46';
-        errorDiv.style.borderLeft = '4px solid var(--success)';
-      } else {
-        errorDiv.style.background = '#fee2e2';
-        errorDiv.style.color = '#991b1b';
-        errorDiv.style.borderLeft = '4px solid var(--error)';
-      }
-      errorDiv.classList.add('show');
-    }
-
-    // Clear forms
-    function clearAuthForms() {
-      document.getElementById('registerName').value = '';
-      document.getElementById('registerEmail').value = '';
-      document.getElementById('registerPassword').value = '';
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-    }
-
-    // Show screens
-    function showAuthScreen() {
-      document.getElementById('authScreen').classList.add('active');
-      document.getElementById('appScreen').classList.remove('active');
-    }
-
-    function showAppScreen() {
-      document.getElementById('authScreen').classList.remove('active');
-      document.getElementById('appScreen').classList.add('active');
-      
-      updateUserDisplay();
-      loadDashboard();
-      setupSidebar();
-    }
-
-    // Update user display
-    function updateUserDisplay() {
-      document.getElementById('userName').textContent = currentUserData.name || 'Usuario';
-      
-      const roleDisplay = {
-        'admin': '👑 Admin',
-        'zonal': '🗺️ Jefa Zonal',
-        'manager': '🏪 Gerente',
-        null: '⏳ Sin Asignar'
-      };
-      
-      const roleBadge = document.getElementById('userRole');
-      roleBadge.textContent = roleDisplay[currentUserData.role] || 'Sin Rol';
-      roleBadge.className = `badge badge-${currentUserData.role || 'pending'}`;
-    }
-
-    // Setup sidebar
-    function setupSidebar() {
-      if (currentUserData.role === 'admin') {
-        document.getElementById('pendingUsersItem').style.display = 'block';
-        document.getElementById('manageZonesItem').style.display = 'block';
-        document.getElementById('manageStoresItem').style.display = 'block';
-      }
-    }
-
-    // Show page
-    function showPage(pageName) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-      
-      document.getElementById(pageName + 'Page').classList.add('active');
-      event.target.classList.add('active');
-      
-      if (pageName === 'dashboard') {
-        loadDashboard();
-      } else if (pageName === 'register-sales') {
-        loadMySales();
-      } else if (pageName === 'pending-users') {
-        loadPendingUsers();
-      } else if (pageName === 'manage-zones') {
-        loadZones();
-      } else if (pageName === 'manage-stores') {
-        loadStores();
-      }
-    }
-
-    // Load dashboard
-    async function loadDashboard() {
-      try {
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        
-        let query = db.collection('sales').where('userId', '==', currentUser.uid).where('date', '>=', monthStart);
-        
-        const snapshot = await query.get();
-        let totalSales = 0;
-        const sales = [];
-        
-        snapshot.forEach(doc => {
-          const sale = doc.data();
-          totalSales += sale.amount || 0;
-          sales.push({ id: doc.id, ...sale });
-        });
-
-        document.getElementById('totalSales').textContent = 'S/. ' + totalSales.toFixed(2);
-        document.getElementById('totalTransactions').textContent = sales.length;
-        document.getElementById('avgTicket').textContent = sales.length > 0 ? 'S/. ' + (totalSales / sales.length).toFixed(2) : 'S/. 0';
-        
-        loadTransactionsTable(sales.slice(0, 10));
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Load transactions table
-    function loadTransactionsTable(sales) {
-      const tbody = document.getElementById('transactionsBody');
-      tbody.innerHTML = '';
-      
-      if (sales.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay transacciones</td></tr>';
-        return;
-      }
-      
-      sales.forEach(sale => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-          <td>${new Date(sale.date).toLocaleDateString('es-PE')}</td>
-          <td>S/. ${(sale.amount || 0).toFixed(2)}</td>
-          <td>${sale.description || '-'}</td>
-          <td>${currentUserData.name}</td>
-        `;
+    try {
+      const userCred = await auth.createUserWithEmailAndPassword(email, password);
+      await db.collection('users').doc(userCred.user.uid).set({
+        name, email, role: null, zone: null, store: null, status: 'pending', createdAt: new Date(), approved: false
       });
+      showError('Cuenta creada. Espera aprobación del admin.', 'success');
+      setTimeout(() => toggleForms(), 2000);
+    } catch (error) {
+      showError(error.message);
     }
+  }
 
-    // Register sale
-    async function registerSale() {
-      const date = document.getElementById('saleDate').value;
-      const amount = parseFloat(document.getElementById('saleAmount').value);
-      const description = document.getElementById('saleDescription').value;
-
-      if (!date || !amount || isNaN(amount)) {
-        alert('Por favor completa los campos requeridos');
-        return;
-      }
-
-      try {
-        await db.collection('sales').add({
-          userId: currentUser.uid,
-          userName: currentUserData.name,
-          zone: currentUserData.zone,
-          store: currentUserData.store,
-          date: new Date(date),
-          amount,
-          description,
-          createdAt: new Date()
-        });
-
-        alert('Venta registrada exitosamente');
-        document.getElementById('saleDate').value = '';
-        document.getElementById('saleAmount').value = '';
-        document.getElementById('saleDescription').value = '';
-        loadMySales();
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
+  async function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) {
+      showError('Completa todos los campos');
+      return;
     }
-
-    // Load my sales
-    async function loadMySales() {
-      try {
-        const snapshot = await db.collection('sales').where('userId', '==', currentUser.uid).orderBy('date', 'desc').get();
-        const tbody = document.getElementById('mySalesBody');
-        tbody.innerHTML = '';
-        
-        if (snapshot.empty) {
-          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay ventas registradas</td></tr>';
-          return;
-        }
-        
-        snapshot.forEach(doc => {
-          const sale = doc.data();
-          const row = tbody.insertRow();
-          row.innerHTML = `
-            <td>${new Date(sale.date).toLocaleDateString('es-PE')}</td>
-            <td>S/. ${(sale.amount || 0).toFixed(2)}</td>
-            <td>${sale.description || '-'}</td>
-            <td><button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="deleteSale('${doc.id}')">Eliminar</button></td>
-          `;
-        });
-      } catch (error) {
-        console.error('Error:', error);
-      }
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      showError(error.message);
     }
+  }
 
-    // Delete sale
-    async function deleteSale(saleId) {
-      if (confirm('¿Estás seguro?')) {
-        try {
-          await db.collection('sales').doc(saleId).delete();
-          loadMySales();
-        } catch (error) {
-          alert('Error: ' + error.message);
-        }
-      }
+  async function logout() {
+    await auth.signOut();
+  }
+
+  function showError(msg, type = 'error') {
+    const e = document.getElementById('authError');
+    e.textContent = msg;
+    e.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+    e.style.color = type === 'success' ? '#065f46' : '#991b1b';
+    e.classList.add('show');
+  }
+
+  function showAuthScreen() {
+    document.getElementById('authScreen').classList.add('active');
+    document.getElementById('appScreen').classList.remove('active');
+  }
+
+  function showAppScreen() {
+    document.getElementById('authScreen').classList.remove('active');
+    document.getElementById('appScreen').classList.add('active');
+    updateUserDisplay();
+    loadDashboard();
+    if (currentUserData.role === 'admin') {
+      document.getElementById('pendingUsersItem').style.display = 'block';
+      document.getElementById('manageZonesItem').style.display = 'block';
+      document.getElementById('manageStoresItem').style.display = 'block';
     }
+  }
 
-    // Load pending users
-    async function loadPendingUsers() {
-      if (currentUserData.role !== 'admin') return;
-      
-      try {
-        const snapshot = await db.collection('users').where('status', '==', 'pending').get();
-        const tbody = document.getElementById('pendingUsersBody');
-        tbody.innerHTML = '';
-        
-        if (snapshot.empty) {
-          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">No hay usuarios pendientes</td></tr>';
-          return;
-        }
-        
-        snapshot.forEach(doc => {
-          const user = doc.data();
-          const row = tbody.insertRow();
-          row.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td><span class="badge badge-pending">Sin Asignar</span></td>
-            <td>
-              <button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem; margin-right:0.5rem;" onclick="approveUser('${doc.id}', '${user.name}')">Aprobar</button>
-              <button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem; background:#ef4444;" onclick="rejectUser('${doc.id}')">Rechazar</button>
-            </td>
-          `;
-        });
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
+  function updateUserDisplay() {
+    document.getElementById('userName').textContent = currentUserData.name;
+    const roles = { 'admin': '👑 Admin', 'zonal': '🗺️ Jefa Zonal', 'manager': '🏪 Gerente', null: '⏳ Sin Asignar' };
+    const rb = document.getElementById('userRole');
+    rb.textContent = roles[currentUserData.role] || 'Sin Rol';
+  }
 
-    // Approve user (simple)
-    async function approveUser(userId, userName) {
-      const role = prompt('Rol (admin/zonal/manager):', 'zonal');
-      if (!role) return;
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(page + 'Page').classList.add('active');
+    event.target.classList.add('active');
+    if (page === 'dashboard') loadDashboard();
+    else if (page === 'register-sales') loadMySales();
+    else if (page === 'pending-users') loadPendingUsers();
+    else if (page === 'manage-zones') loadZones();
+    else if (page === 'manage-stores') loadStores();
+  }
 
-      let zone = null;
-      let store = null;
-
-      if (role === 'zonal') {
-        zone = prompt('Zona (ej: Lima Norte):', '');
-        if (!zone) return;
-      } else if (role === 'manager') {
-        store = prompt('Tienda:', '');
-        if (!store) return;
-      }
-
-      try {
-        await db.collection('users').doc(userId).update({
-          role,
-          zone,
-          store,
-          status: 'approved',
-          approved: true,
-          approvedAt: new Date()
-        });
-
-        loadPendingUsers();
-        alert('Usuario aprobado');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    // Reject user
-    async function rejectUser(userId) {
-      try {
-        await db.collection('users').doc(userId).update({
-          status: 'rejected',
-          rejectedAt: new Date()
-        });
-        loadPendingUsers();
-        alert('Usuario rechazado');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    // Load zones
-    async function loadZones() {
-      if (currentUserData.role !== 'admin') return;
-      
-      try {
-        const snapshot = await db.collection('zones').orderBy('name').get();
-        const tbody = document.getElementById('zonesBody');
-        tbody.innerHTML = '';
-        
-        if (snapshot.empty) {
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999;">No hay zonas creadas</td></tr>';
-          return;
-        }
-        
-        snapshot.forEach(doc => {
-          const zone = doc.data();
-          const row = tbody.insertRow();
-          row.innerHTML = `
-            <td>${zone.name}</td>
-            <td>${zone.storeCount || 0}</td>
-            <td><button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem; background:#ef4444;" onclick="deleteZone('${doc.id}')">Eliminar</button></td>
-          `;
-        });
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Create zone
-    async function createZone() {
-      const name = document.getElementById('zoneName').value;
-      
-      if (!name) {
-        alert('Por favor ingresa el nombre de la zona');
-        return;
-      }
-      
-      try {
-        await db.collection('zones').add({
-          name,
-          storeCount: 0,
-          createdAt: new Date()
-        });
-        
-        document.getElementById('zoneName').value = '';
-        loadZones();
-        alert('Zona creada exitosamente');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    // Delete zone
-    async function deleteZone(zoneId) {
-      if (confirm('¿Estás seguro?')) {
-        try {
-          await db.collection('zones').doc(zoneId).delete();
-          loadZones();
-        } catch (error) {
-          alert('Error: ' + error.message);
-        }
-      }
-    }
-
-    // Load stores
-    async function loadStores() {
-      if (currentUserData.role !== 'admin') return;
-      
-      try {
-        const snapshot = await db.collection('stores').orderBy('zone').get();
-        const tbody = document.getElementById('storesBody');
-        tbody.innerHTML = '';
-        
-        if (snapshot.empty) {
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999;">No hay tiendas creadas</td></tr>';
-          return;
-        }
-        
-        snapshot.forEach(doc => {
-          const store = doc.data();
-          const row = tbody.insertRow();
-          row.innerHTML = `
-            <td>${store.zone}</td>
-            <td>${store.name}</td>
-            <td><button class="btn btn-primary" style="font-size:0.8rem; padding:0.4rem 0.8rem; background:#ef4444;" onclick="deleteStore('${doc.id}')">Eliminar</button></td>
-          `;
-        });
-        
-        loadZonesForStoreSelect();
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Load zones for store select
-    async function loadZonesForStoreSelect() {
-      try {
-        const snapshot = await db.collection('zones').get();
-        const select = document.getElementById('storeZone');
-        select.innerHTML = '<option value="">Selecciona zona</option>';
-        
-        snapshot.forEach(doc => {
-          const zone = doc.data();
-          const option = document.createElement('option');
-          option.value = zone.name;
-          option.textContent = zone.name;
-          select.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Create store
-    async function createStore() {
-      const zone = document.getElementById('storeZone').value;
-      const name = document.getElementById('storeName').value;
-      
-      if (!zone || !name) {
-        alert('Por favor completa todos los campos');
-        return;
-      }
-      
-      try {
-        await db.collection('stores').add({
-          zone,
-          name,
-          createdAt: new Date()
-        });
-        
-        document.getElementById('storeName').value = '';
-        document.getElementById('storeZone').value = '';
-        loadStores();
-        alert('Tienda creada exitosamente');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    }
-
-    // Delete store
-    async function deleteStore(storeId) {
-      if (confirm('¿Estás seguro?')) {
-        try {
-          await db.collection('stores').doc(storeId).delete();
-          loadStores();
-        } catch (error) {
-          alert('Error: ' + error.message);
-        }
-      }
-    }
-
-    // Set today's date
-    window.addEventListener('load', function() {
-      const dateInput = document.getElementById('saleDate');
-      if (dateInput) {
-        dateInput.valueAsDate = new Date();
-      }
+  async function loadDashboard() {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const snapshot = await db.collection('sales').where('userId', '==', currentUser.uid).where('date', '>=', monthStart).get();
+    let total = 0;
+    const sales = [];
+    snapshot.forEach(doc => {
+      total += doc.data().amount || 0;
+      sales.push(doc.data());
     });
-  </script>
+    document.getElementById('totalSales').textContent = 'S/. ' + total.toFixed(2);
+    document.getElementById('totalTransactions').textContent = sales.length;
+    document.getElementById('avgTicket').textContent = sales.length > 0 ? 'S/. ' + (total / sales.length).toFixed(2) : 'S/. 0';
+    const tb = document.getElementById('transactionsBody');
+    tb.innerHTML = sales.length === 0 ? '<tr><td colspan="4" style="text-align:center">Sin transacciones</td></tr>' : '';
+    sales.slice(0, 10).forEach(s => {
+      tb.innerHTML += `<tr><td>${new Date(s.date).toLocaleDateString('es-PE')}</td><td>S/. ${(s.amount || 0).toFixed(2)}</td><td>${s.description || '-'}</td><td>${currentUserData.name}</td></tr>`;
+    });
+  }
+
+  async function registerSale() {
+    const date = document.getElementById('saleDate').value;
+    const amount = parseFloat(document.getElementById('saleAmount').value);
+    const desc = document.getElementById('saleDescription').value;
+    if (!date || !amount) { alert('Completa los campos'); return; }
+    await db.collection('sales').add({
+      userId: currentUser.uid, userName: currentUserData.name, zone: currentUserData.zone, store: currentUserData.store, date: new Date(date), amount, description: desc, createdAt: new Date()
+    });
+    alert('Venta registrada');
+    document.getElementById('saleDate').value = '';
+    document.getElementById('saleAmount').value = '';
+    document.getElementById('saleDescription').value = '';
+    loadMySales();
+  }
+
+  async function loadMySales() {
+    const snapshot = await db.collection('sales').where('userId', '==', currentUser.uid).orderBy('date', 'desc').get();
+    const tb = document.getElementById('mySalesBody');
+    tb.innerHTML = snapshot.empty ? '<tr><td colspan="4" style="text-align:center">Sin ventas</td></tr>' : '';
+    snapshot.forEach(doc => {
+      const s = doc.data();
+      tb.innerHTML += `<tr><td>${new Date(s.date).toLocaleDateString('es-PE')}</td><td>S/. ${(s.amount || 0).toFixed(2)}</td><td>${s.description || '-'}</td><td><button class="btn btn-primary" style="font-size:0.8rem;padding:0.4rem;" onclick="db.collection('sales').doc('${doc.id}').delete().then(()=>loadMySales())">Eliminar</button></td></tr>`;
+    });
+  }
+
+  async function loadPendingUsers() {
+    const snapshot = await db.collection('users').where('status', '==', 'pending').get();
+    const tb = document.getElementById('pendingUsersBody');
+    tb.innerHTML = snapshot.empty ? '<tr><td colspan="3" style="text-align:center">Sin usuarios pendientes</td></tr>' : '';
+    snapshot.forEach(doc => {
+      tb.innerHTML += `<tr><td>${doc.data().name}</td><td>${doc.data().email}</td><td><button class="btn btn-primary" style="font-size:0.8rem;padding:0.4rem;" onclick="approveUser('${doc.id}','${doc.data().name}')">Aprobar</button></td></tr>`;
+    });
+  }
+
+  function approveUser(uid, name) {
+    const role = prompt('Rol (admin/zonal/manager):', 'zonal');
+    if (!role) return;
+    let zone = null, store = null;
+    if (role === 'zonal') { zone = prompt('Zona:', ''); if (!zone) return; }
+    else if (role === 'manager') { store = prompt('Tienda:', ''); if (!store) return; }
+    db.collection('users').doc(uid).update({ role, zone, store, status: 'approved', approved: true, approvedAt: new Date() }).then(() => { loadPendingUsers(); alert('Aprobado'); });
+  }
+
+  async function createZone() {
+    const name = document.getElementById('zoneName').value;
+    if (!name) { alert('Ingresa nombre'); return; }
+    await db.collection('zones').add({ name, storeCount: 0, createdAt: new Date() });
+    document.getElementById('zoneName').value = '';
+    loadZones();
+  }
+
+  async function loadZones() {
+    const snapshot = await db.collection('zones').orderBy('name').get();
+    const tb = document.getElementById('zonesBody');
+    tb.innerHTML = snapshot.empty ? '<tr><td colspan="3" style="text-align:center">Sin zonas</td></tr>' : '';
+    snapshot.forEach(doc => {
+      tb.innerHTML += `<tr><td>${doc.data().name}</td><td>${doc.data().storeCount || 0}</td><td><button class="btn btn-primary" style="font-size:0.8rem;padding:0.4rem;background:#ef4444;" onclick="db.collection('zones').doc('${doc.id}').delete().then(()=>loadZones())">Eliminar</button></td></tr>`;
+    });
+  }
+
+  async function createStore() {
+    const zone = document.getElementById('storeZone').value;
+    const name = document.getElementById('storeName').value;
+    if (!zone || !name) { alert('Completa campos'); return; }
+    await db.collection('stores').add({ zone, name, createdAt: new Date() });
+    document.getElementById('storeName').value = '';
+    loadStores();
+  }
+
+  async function loadStores() {
+    const snapshot = await db.collection('stores').orderBy('zone').get();
+    const tb = document.getElementById('storesBody');
+    tb.innerHTML = snapshot.empty ? '<tr><td colspan="3" style="text-align:center">Sin tiendas</td></tr>' : '';
+    snapshot.forEach(doc => {
+      const s = doc.data();
+      tb.innerHTML += `<tr><td>${s.zone}</td><td>${s.name}</td><td><button class="btn btn-primary" style="font-size:0.8rem;padding:0.4rem;background:#ef4444;" onclick="db.collection('stores').doc('${doc.id}').delete().then(()=>loadStores())">Eliminar</button></td></tr>`;
+    });
+    const snapshot2 = await db.collection('zones').get();
+    const select = document.getElementById('storeZone');
+    select.innerHTML = '<option value="">Selecciona zona</option>';
+    snapshot2.forEach(doc => {
+      select.innerHTML += `<option value="${doc.data().name}">${doc.data().name}</option>`;
+    });
+  }
+
+  window.addEventListener('load', () => {
+    document.getElementById('saleDate').valueAsDate = new Date();
+  });
+</script>
 
 </body>
 </html>
